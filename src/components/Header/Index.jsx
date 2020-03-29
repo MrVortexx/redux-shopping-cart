@@ -12,14 +12,14 @@ export default function header() {
          <img src={logo} alt=""/>
         </Link>
 
-        <Cart>
+        <Cart to ="/cart"> 
             <div>
                 <strong>Meu carrinho</strong>
                 <span>3 itens</span>
             </div>
             <MdShoppingBasket color="#fff" size = {36}/>
 
-        </Cart>
+        </Cart>            
     </Container>
   );
 }

@@ -1,88 +1,57 @@
-import React from 'react';
-import {Link} from 'react-router-dom'
+import React,{Component} from 'react'
+import api from '../../services/api'
+import {connect} from 'react-redux'
 import {MdAddShoppingCart} from 'react-icons/md'
+import formated from '../../util/formated'
 
 import { ProductList } from './styles';
 
-export default function Home() {
-  return (
-     <ProductList>
-         <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
+ class Home extends Component{
+    state = {
+        products: []
 
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
+    }
+    async componentDidMount(){
+        const products = await api.get('/products')
+        const data = products.data.map(product => (
+            {...product,
+                priceFormated: formated(product.price)
 
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>    
-         <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
+            }
+        ))
+        this.setState({
+            products: data
+        })        
+    }
+    async addProduct(product){
+        const {dispatch} = this.props
+        dispatch({
+            type: 'ADD_TO_CART',
+            product
+        })
 
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
+    }
+    render() {
+        const products = this.state.products
+        return(
+            <ProductList>   
+           { products.map(product=> (           
+                <li>
+                    <img src={product.image} alt ="tenis"/>
 
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>
-           <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
-
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
-
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>
-           <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
-
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
-
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>
-           <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
-
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
-
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>
-           <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
-
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
-
-            <div>
-                <MdAddShoppingCart size ={16} color="#fff"/>
-            </div>
-        </li>
-           <li>
-            <img src="https://static.netshoes.com.br/produtos/tenis-nike-revolution-5-masculino/26/HZM-1731-026/HZM-1731-026_zoom2.jpg?ts=1571078789&ims=326x" alt=""/>
-
-            <strong> Tenis Nike Revolution</strong>
-            <span> R$160,00</span>
-            <button>
-                <div>
-                    <MdAddShoppingCart size ={16} color="#fff"/> 3
-                </div>
-                 
-                    <span>adicionar ao carrinho</span>
-                
-            </button>
-            
-        </li>
-        
-     </ProductList>
-  );
+                    <strong> {product.title}</strong>
+                    <span> {product.priceFormated}</span>
+                    <button onClick = {()=>this.addProduct(product)}>
+                        <div>
+                            <MdAddShoppingCart size ={16} color="#fff"/> 3
+                        </div>                   
+                            <span>adicionar ao carrinho</span>
+                        
+                    </button>             
+                </li>       
+            ))}
+            </ProductList>            
+     )
+  }
 }
+export default connect()(Home)

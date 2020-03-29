@@ -1,16 +1,21 @@
 import React from 'react'
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import {BrowserRouter} from 'react-router-dom'
+import {Provider} from 'react-redux'
 import Header from './components/Header/Index.jsx'
 import Routes from './routes'
 import GlobalStyles from './styles/global'
  
+import store from './stores/index'
 function App() {
   return (
-    <BrowserRouter>
+    <Provider store= {store}>
+      <BrowserRouter>
         <Header/>
         <Routes/>
         <GlobalStyles/>
-   </BrowserRouter>
+      </BrowserRouter>
+    </Provider>
+    
   );
 }
 
