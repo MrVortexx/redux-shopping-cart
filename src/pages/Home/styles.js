@@ -12,6 +12,7 @@ li{
     flex-direction: column;
     border-radius: 4px;
     padding: 20px;
+    max-width: 300px;
     img{
     max-width: 200px;
     align-self: center;
@@ -55,5 +56,13 @@ li{
     }
 }
 
-  
+@media(max-width: 992px){
+    grid-template-columns: repeat(2, 1fr);
+    li{
+        margin: 0 auto;
+    }
+}
+@media(max-width: 762px){
+    grid-template-columns: 1fr ;
+}  
 `;

@@ -9,8 +9,7 @@ import { ProductList } from './styles';
  class Home extends Component{
     state = {
         products: []
-
-    }
+    }   
     async componentDidMount(){
         const products = await api.get('/products')
         const data = products.data.map(product => (
@@ -23,13 +22,12 @@ import { ProductList } from './styles';
             products: data
         })        
     }
-    async addProduct(product){
+      addProduct = (product) =>{
         const {dispatch} = this.props
         dispatch({
             type: 'ADD_TO_CART',
             product
         })
-
     }
     render() {
         const products = this.state.products
