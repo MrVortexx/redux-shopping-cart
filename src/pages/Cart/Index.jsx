@@ -1,10 +1,24 @@
 import React from 'react';
+import formated from '../../util/formated'
 import {connect} from 'react-redux'
 import {MdRemoveCircleOutline, MdAddCircleOutline, MdDelete} from 'react-icons/md'
 
 import { Container, Table, Total } from './styles';
 
- function Cart({cart}) {
+ function Cart({cart,total, dispatch}) {
+   const deleteProduct = (id) =>{
+      dispatch({
+        type: 'DELETE_FROM_CART',
+        id
+      })
+   }
+   const changeAmount = (id, symbol) => {
+      dispatch({
+        type: 'CHANGE_AMOUNT',
+        id,
+        symbol
+      })
+   }
   return (
     <Container>
         <Table>
@@ -30,17 +44,23 @@ import { Container, Table, Total } from './styles';
 
                 <td>
                   <div>
-                    <button><MdRemoveCircleOutline SIZE = {20} color="7159c1"/></button>
-                    <input type="number" readOnly  value ={carItem.amount}/>
-                    <button><MdAddCircleOutline SIZE = {20} color="7159c1"/></button>
+                      <button onClick ={()=> changeAmount(carItem.id, '-')}>
+                          <MdRemoveCircleOutline SIZE = {20} color="7159c1"/>
+                      </button>
+
+                     <input type="number" readOnly  value ={carItem.amount}/>
+
+                      <button onClick ={()=> changeAmount(carItem.id, '+')}>
+                          <MdAddCircleOutline SIZE = {20} color="7159c1"/>
+                      </button>
                   </div>
                 </td> 
 
                 <td>
-                  <strong>{carItem.price}</strong>
+                  <strong>{carItem.subtotal}</strong>
                 </td> 
                 <td>
-                  <button><MdDelete size = {20} color="7159c1"/></button>
+                  <button onClick= {()=> deleteProduct(carItem.id)}><MdDelete size = {20} color="7159c1"/></button>
                 </td>
               </tr>
 
@@ -55,7 +75,7 @@ import { Container, Table, Total } from './styles';
           <button>Finalizar</button>
           <Total>
               <span>Total</span>
-              <strong>130,00</strong>
+              <strong>{total}</strong>
 
           </Total>
         
@@ -64,6 +84,12 @@ import { Container, Table, Total } from './styles';
   );
 }
  const mapStateToProps = state => ({
-  cart: state.cart
+  cart: state.cart.map(carItem=> ({
+    ...carItem,
+    subtotal : formated((carItem.price)*carItem.amount)
+  })),
+  total:formated (state.cart.reduce((acumullator, currentValue)=> {
+    return   acumullator + ( currentValue.price *currentValue.amount)
+  }, 0))
 });
 export default connect(mapStateToProps)(Cart)

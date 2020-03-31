@@ -13,9 +13,33 @@ export default function cart (state = [], action){
                     draft.push({
                         ...action.product, amount: 1
                     })
-                }
+                }           
             })
-         default: 
+            
+        case 'DELETE_FROM_CART':
+            return produce(state, draft=>{
+                const productIndex = draft.findIndex(product=> product.id == action.id)
+               if(productIndex!=-1) {
+                    draft.splice(productIndex, 1)
+               }    
+            })
+             
+        case 'CHANGE_AMOUNT': 
+            return produce(state, draft=> {
+                const productIndex = draft.findIndex(product=> product.id == action.id)
+                   switch(action.symbol){
+                        case '-':{
+                            if(draft[productIndex].amount>1){
+                                    draft[productIndex].amount -=1
+                            }
+                        }
+                            break
+                        case '+':
+                             draft[productIndex].amount+=1                                                                    
+                    }
+            })  
+
+         default:
             return state
     }
 } 
